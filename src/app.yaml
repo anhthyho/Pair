@@ -1,0 +1,3 @@
+runtime: nodejs10
+beta_settings:
+  cloud_sql_instances: pair-269600:us-west1:pair-db

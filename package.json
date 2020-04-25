@@ -4,13 +4,39 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "yarn start-client & yarn start-server",
+    "start-client": "webpack-dev-server",
+    "start-server": "nodemon  server/index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "-": "0.0.1",
+    "body-parser": "^1.19.0",
+    "composable-middleware": "^0.3.0",
+    "cors": "^2.8.5",
+    "curl": "^0.1.4",
     "express": "^4.17.1",
+    "express-jwt": "^5.3.3",
     "express-session": "^1.17.0",
-    "mysql": "^2.18.1"
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^3.5.6",
+    "mongoose": "^5.9.10",
+    "mysql": "^2.18.1",
+    "npm-run-all": "^4.1.5",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-router-dom": "^5.1.2",
+    "yarn": "^1.22.4"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.5",
+    "@babel/preset-react": "^7.9.4",
+    "babel-loader": "^8.1.0",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11"
   }
 }
