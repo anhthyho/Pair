@@ -14,6 +14,7 @@ import {
   } from "react-router-dom";
 import {withRouter} from 'react-router';
 import { get } from 'mongoose';
+import { sign } from 'jsonwebtoken';
 
 class App extends Component{
     constructor(props){
@@ -28,9 +29,9 @@ class App extends Component{
                 password:'123123'
             },
             signUpForm:{
-                displayName:'',
-                email:'',
-                password:''
+                displayName:'Kasamats',
+                email:'kasamats@test.com',
+                password:'123123'
             },
         };
         this.api = API(access_token);
@@ -68,17 +69,41 @@ class App extends Component{
     }
     onSignUpSubmit(){
         const {signUpForm} = this.state;
-        this.setState({
-            currentuser: {
-                displayName: signUpForm.displayName,
-                email: signUpForm.email,
-            },
-            signUpForm:{
-                displayName:'',
-                email:'',
-                password:''
-            },
-        });
+
+        fetch (
+            'http://localhost:8080/auth/signup',
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: signUpForm.email,
+                    displayName: signUpForm.displayName, 
+                    password: signUpForm.password,
+                }), 
+            }
+        ).then(data => data.json())
+        .then(({ access_token }) => {
+                console.log(access_token);
+                this.setState({
+                    access_token,
+                });this.setState({
+                    currentuser: {
+                        displayName: signUpForm.displayName,
+                        email: signUpForm.email,
+                    },
+                    signUpForm:{
+                        displayName:'',
+                        email:'',
+                        password:''
+                    },
+                });
+                this.api = API(access_token);
+                this.loadCurrentUser();
+            })
+        .catch(err => console.error(err));
+
     }
     onSignInSubmit(){
         const {
@@ -89,15 +114,21 @@ class App extends Component{
         } = this.state;
         
         //api call to use email and password
-        this.api.post({
-            endpoint: 'auth/login',
-            body:{
-                email, 
-                password,
+        fetch (
+            'http://localhost:8080/auth/login',
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email,
+                    password,
+                }), 
             }
-        })
+        ).then(data => data.json())
         .then(({ access_token }) => {
-                //console.log(access_token);
+                console.log(access_token);
                 this.setState({
                     access_token,
                 });

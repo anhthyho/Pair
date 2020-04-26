@@ -117,11 +117,32 @@ app.post('/auth/login',
     }
 );
   
-app.post('/auth/signup', 
-    passport.authenticate('local', {session: false}), 
-    (req, res) => {
-        const access_token = auth.sign(req.user);
-        res.json({access_token});
+app.post('/auth/signup', (req, res) => {
+        const user = req.body; 
+
+        //find a user with given email 
+        //if there are none, create 
+        //else send an error message
+        console.log(user);
+
+        User.find({email: user.email}).then(users => {
+            if (users.length === 0){
+                // create a new user 
+                // send an auth token to user 
+                User.create(user).then(user_ => {
+                    const access_token = auth.sign(user_);
+                    console.log(user.displayName + ': ' + access_token);
+                    res.json({access_token});
+                }); 
+            }else {
+                console.log('email is already in use');
+                res.json({
+                    status: 'Error',
+                    message: 'Email is already in use',
+                });
+            }
+        })
+        
     }
 );
 const isAuthenticated = auth.isAuthenticated(User);

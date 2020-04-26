@@ -1,5 +1,5 @@
 auth:
-curl -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImJvYkBleGFtcGxlLmNvbSIsImlkIjoiNWVhMjhhMzIwOTgwY2EyYzI0NzkzMTYyIiwiaWF0IjoxNTg3NzEwNjg0LCJleHAiOjE1ODc3MTQyODR9.4k1vCqTP54Jy0dyP7Wr_ioYFQC-nYIVLRzfwp28Xgp0" http://localhost:8080/api/users/me -v
+curl -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImJvYkBleGFtcGxlLmNvbSIsImlkIjoiNWVhNTBlNDRmZjk4MDc1NzMwYWI4ODE5IiwiaWF0IjoxNTg3ODc1NTI0LCJleHAiOjE1ODc4NzkxMjR9.7j5SO5XwHo_0FaQ6yyuZuegeFxp_pEIY7hnLkwdDVUE" http://localhost:8080/api/users/me -v
 
 create:
-curl -X POST -H "Content-Type: application/json" -d "{\"email\":\"bob@example.com\", \"password\":\"321321\"}" "http://localhost:8080/auth/login" 
+curl -X POST -H "Content-Type: application/json" -d "{\"email\":\"bob@example.com\", \"password\":\"321321\"}" "http://localhost:8080/auth/login"  
