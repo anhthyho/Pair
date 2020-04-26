@@ -117,6 +117,13 @@ app.post('/auth/login',
     }
 );
   
+app.post('/auth/signup', 
+    passport.authenticate('local', {session: false}), 
+    (req, res) => {
+        const access_token = auth.sign(req.user);
+        res.json({access_token});
+    }
+);
 const isAuthenticated = auth.isAuthenticated(User);
 // --------------------------------------------
 // API TIMEEEEEE - basic routes

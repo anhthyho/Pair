@@ -1,123 +1,28 @@
 import React, { Component } from 'react';
 import { render } from 'react-dom';
+import API from './api.js';
+
+import SignupForm from './SignupForm.js'; 
+import SigninForm from './SigninForm.js'; 
+import UserProfile from './UserProfile.js'; 
+
 import {
     BrowserRouter as Router,
     Route,
+    Switch,
     Link,
   } from "react-router-dom";
 import {withRouter} from 'react-router';
-class SigninForm extends Component{
-    render(){
-        const {
-            state: {
-                email, password
-            }, 
-            onEmailUpdate,
-            onPasswordUpdate,
-            onSubmit,
-        } = this.props;
-
-        const FORM_NAME = 'signInForm';
-
-        return(
-            <div>
-                <h2>Sign In</h2>
-                <div>
-                    <input 
-                        type="email" 
-                        onChange={e => onEmailUpdate(FORM_NAME, e.target.value)}
-                        value = {email}
-                        placeholder="Email" />
-                </div>
-                <div>
-                    <input 
-                        type="password" 
-                        onChange={e => onPasswordUpdate(FORM_NAME, e.target.value)}
-                        value = {password}
-                        placeholder="Password"/>
-                </div>
-                <div>
-                    <button type="button" onClick={ () => {
-                        onSubmit(); }
-                    }>Continue</button>
-                </div>
-            </div>
-        );
-    }
-}
-
-class UserProfile extends Component{
-    render(){
-        const {user} = this.props;
-        return(
-            <div>
-                <h2>User Profile</h2>
-                <span>Hi {user.displayName}</span>
-            </div>
-            
-        );
-    }
-}
-class SignupForm extends Component{
-    render(){
-        const {
-            state: {
-                displayName, email, password
-            }, 
-            onNameUpdate,
-            onEmailUpdate,
-            onPasswordUpdate,
-            onSubmit,
-            history,
-        } = this.props;
-
-        const FORM_NAME = 'signUpForm';
-        
-        return(
-            <div>
-                <h2>Sign Up for Pairs!</h2>
-                <div>
-                    <input 
-                        type="text" 
-                        onChange={e => onNameUpdate(e.target.value)}
-                        value = {name}
-                        placeholder="Name" />
-                </div>
-                <div>
-                    <input 
-                        type="email" 
-                        onChange={e => onEmailUpdate(FORM_NAME, e.target.value)}
-                        value = {email}
-                        placeholder="Email" />
-                </div>
-                <div>
-                    <input 
-                        type="password" 
-                        onChange={e => onPasswordUpdate(FORM_NAME, e.target.value)}
-                        value = {password}
-                        placeholder="Password"/>
-                </div>
-                <div>
-                    <button type="button" onClick={ () => {
-                        onSubmit(); 
-                        history.push('/app/user/profile')}
-                    }>Continue</button>
-                </div>
-
-            </div>
-          );
-    }
-}
-
-//will route sign up form, extract history/properties and create a new react component
-const SignUpFormWithRouter = withRouter(SignupForm); 
-const SignInFormWithRouter = withRouter(SigninForm);
+import { get } from 'mongoose';
 
 class App extends Component{
     constructor(props){
         super(props);
+        const access_token = window.localStorage.getItem('access_token');
         this.state={
+            access_token,
             currentuser: null, 
+            user: null,
             signInForm:{
                 email:'alice@example.com',
                 password:'123123'
@@ -128,10 +33,21 @@ class App extends Component{
                 password:''
             },
         };
+        this.api = API(access_token);
     }
-    onNameUpdate(name){
+    componentDidUpdate(){
+        const {access_token} = this.state;
+        window.localStorage.setItem('access_token', access_token); 
+    }
+
+    componentDidMount(){
+        const {access_token} = this.state; 
+        this.loadCurrentUser();
+    }
+
+    onNameUpdate(displayName){
         const {signUpForm} = this.state;
-        const updatedForm = Object.assign({}, signUpForm, { name })
+        const updatedForm = Object.assign({}, signUpForm, { displayName })
         this.setState({
             signUpForm: updatedForm,
         })
@@ -154,7 +70,7 @@ class App extends Component{
         const {signUpForm} = this.state;
         this.setState({
             currentuser: {
-                displayName: signUpForm.name,
+                displayName: signUpForm.displayName,
                 email: signUpForm.email,
             },
             signUpForm:{
@@ -173,43 +89,49 @@ class App extends Component{
         } = this.state;
         
         //api call to use email and password
-        fetch (
-            'http://localhost:8080/auth/login',
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    email,
-                    password,
-                }), 
+        this.api.post({
+            endpoint: 'auth/login',
+            body:{
+                email, 
+                password,
             }
-        ).then(data => data.json())
-        .then(({ access_token }) => {
-            console.log(access_token);
-            fetch (
-                'http://localhost:8080/api/users/me',
-                {
-                    headers: {
-                        Authorization: `Bearer ${access_token}`, 
-                    }
-                }
-                ).then(data => data.json())
-                .then(({email, displayName}) => {
-                    this.setState({
-                        currentuser: {
-                            email,
-                            displayName
-                        }
-                    });
-                });
         })
+        .then(({ access_token }) => {
+                //console.log(access_token);
+                this.setState({
+                    access_token,
+                });
+                this.api = API(access_token);
+                this.loadCurrentUser();
+            })
         .catch(err => console.error(err));
     }
-    
+
+    loadCurrentUser(){
+        this.loadUser({id: 'me'});
+    }
+
+    loadUser({id}){
+        const userField = id === 'me' ? 'currentuser' : 'user';
+        this.setState({
+            [userField]: false,
+        })
+        this.api.get({
+            endpoint: `api/users/${id}`,
+        })
+            .then(({email, displayName}) => {
+                this.setState({
+                    [userField]: {
+                        email,
+                        displayName
+                    }
+                });
+            });
+    }
+
+
     render(){
-        const {currentuser, signUpForm, signInForm} = this.state; 
+        const {currentuser, user, signUpForm, signInForm} = this.state; 
         
         return (
             <Router>
@@ -218,12 +140,12 @@ class App extends Component{
                         <li><Link to= "/app/signin">Sign in</Link></li>
                         <li><Link to= "/app/signup">Sign up</Link></li>
                         { currentuser && 
-                            <li><Link to= "/app/user/profile">{currentuser.displayName}</Link></li>
+                            <li><Link to= "/app/user/me/profile">{currentuser.displayName}</Link></li>
                         }
                     </ul>
                     <div> 
                         <Route path="/app/signup" render= { () => (
-                            <SignUpFormWithRouter    
+                            <SignupForm
                                 state={signUpForm}
                                 onNameUpdate={this.onNameUpdate.bind(this)}
                                 onEmailUpdate={this.onEmailUpdate.bind(this)}
@@ -232,14 +154,22 @@ class App extends Component{
                             /> 
                         )}/>
                         <Route path="/app/signin" render= { () => (
-                            <SignInFormWithRouter    
+                            <SigninForm  
                                 state={signInForm}
                                 onEmailUpdate={this.onEmailUpdate.bind(this)}
                                 onPasswordUpdate={this.onPasswordUpdate.bind(this)}
                                 onSubmit={this.onSignInSubmit.bind(this)}
                             /> 
                         )}/>
-                        <Route path="/app/user/profile" render= { () => (<UserProfile user={currentuser}/>)}/>
+                        <Switch>
+                            <Route path="/app/user/me/profile"  render= { () => (<UserProfile user={currentuser}/>)}/>
+                            <Route path="/app/user/:id/profile" render= { ({match}) => (
+                                <UserProfile 
+                                    user={user} 
+                                    match={match}
+                                    loadUser={this.loadUser.bind(this)}
+                                />)}/>
+                        </Switch>
                     </div>
                 </div>
             </Router>
