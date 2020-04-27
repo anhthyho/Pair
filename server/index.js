@@ -1,5 +1,9 @@
 const express = require('express');
 const app = express();
+
+const http = require('http').createServer(app);
+const io = require('socket.io')(http);
+
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 
@@ -212,7 +216,24 @@ app.use((err, req, res, next) => {
     next();
 });
 
+//---- socket.io integration
+
+let messages = [];
+
+
+io.on('connection', (socket) => {
+    //console.log('a user connected');
+    
+    socket.emit('getMsgs', messages);
+    socket.on('chatMsg', msg =>{
+        messages = [].concat(messages, msg);
+        //console.log(sender, text);
+        socket.broadcast.emit('newChatMsg', msg); 
+    });
+
+  });
+
 const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => {
+http.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}...`);
 });

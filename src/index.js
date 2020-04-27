@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { render } from 'react-dom';
+import io from 'socket.io-client'; 
 import API from './api.js';
 
 import SignupForm from './SignupForm.js';
@@ -40,17 +41,47 @@ class App extends Component {
                 email: 'kasamats@test.com',
                 password: '123123'
             },
+            messages: [],
         };
         this.api = API(access_token);
     }
     componentDidUpdate() {
         const { access_token } = this.state;
         window.localStorage.setItem('access_token', access_token);
+
     }
 
     componentDidMount() {
         const { access_token } = this.state;
-        this.loadCurrentUser();
+        this.loadCurrentUser(); 
+
+        //---- socket.io ----------
+        const socket = io('http://localhost:8080');
+        this.socket = socket; 
+        socket.on('getMsgs', messages =>{
+            this.setState({
+                messages, 
+            });
+        });
+
+        socket.on('newChatMsg', msg=>{
+            this.setState({
+                messages: [].concat(this.state.messages, msg), 
+            });
+        })
+    }
+
+    sendChatMsg(text){
+        const  msg = {
+            sender: this.state.currentuser.displayName,
+            text,
+        };
+
+        this.setState({
+            messages: [].concat(this.state.messages, msg), 
+        });
+        
+        this.socket.emit('chatMsg', msg); 
     }
 
     onNameUpdate(displayName) {
@@ -232,14 +263,21 @@ class App extends Component {
                             />
                         )} />
                         <Switch>
-                            <Route path="/app/user/me/profile" render={() => (<UserProfile user={currentuser} />)} />
+                            <Route path="/app/user/me/profile" render={() => (
+                                <UserProfile 
+                                    user={currentuser}
+                                    onSend={this.sendChatMsg.bind(this)}
+                                    messages={this.state.messages}
+                                />)} />
                             <Route path="/app/user/:id/profile" render={({ match }) => (
                                 <UserProfile
                                     user={user}
+                                    messages={this.state.messages}
                                     match={match}
                                     loadUser={this.loadUser.bind(this)}
                                     onUp={this.voteUp.bind(this)}
                                     onDown={this.voteDown.bind(this)}
+                                    onSend={this.sendChatMsg.bind(this)}
                                 />)} />
                         </Switch>
                     </div>
