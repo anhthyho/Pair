@@ -7,6 +7,8 @@ import SignupForm from './SignupForm.js';
 import SigninForm from './SigninForm.js';
 import UserProfile from './UserProfile.js';
 import PeopleList from './PeopleList.js';
+import MatchList from './MatchList.js';
+import UploadPhoto from './UploadPhoto.js';
 
 //switch between showing/not showing based on authentication
 const Protected = ({ authenticated, children }) => (
@@ -31,6 +33,7 @@ class App extends Component {
             access_token,
             currentuser: null,
             user: null,
+            matches: [],
             people: [],
             signInForm: {
                 email: 'alice@example.com',
@@ -41,6 +44,7 @@ class App extends Component {
                 email: 'kasamats@test.com',
                 password: '123123'
             },
+            uploadPhoto:{},
             messages: [],
         };
         this.api = API(access_token);
@@ -80,7 +84,7 @@ class App extends Component {
         this.setState({
             messages: [].concat(this.state.messages, msg), 
         });
-        
+
         this.socket.emit('chatMsg', msg); 
     }
 
@@ -98,9 +102,44 @@ class App extends Component {
             [form]: updatedForm,
         })
     }
+    onDescUpdate(form, desc) {
+        const oldForm = this.state[form];
+        const updatedForm = Object.assign({}, oldForm, { desc })
+        this.setState({
+            [form]: updatedForm,
+        })
+    }
+    onAgeUpdate(form, age) {
+        const oldForm = this.state[form];
+        const updatedForm = Object.assign({}, oldForm, { age })
+        this.setState({
+            [form]: updatedForm,
+        })
+    }
+    onLocationUpdate(form, location) {
+        const oldForm = this.state[form];
+        const updatedForm = Object.assign({}, oldForm, { location })
+        this.setState({
+            [form]: updatedForm,
+        })
+    }
+    onEthnicityUpdate(form, ethnicity) {
+        const oldForm = this.state[form];
+        const updatedForm = Object.assign({}, oldForm, { ethnicity })
+        this.setState({
+            [form]: updatedForm,
+        })
+    }
     onPasswordUpdate(form, password) {
         const oldForm = this.state[form]
         const updatedForm = Object.assign({}, oldForm, { password })
+        this.setState({
+            [form]: updatedForm,
+        })
+    }
+    onPPUpdate(form, PP) {
+        const oldForm = this.state[form]
+        const updatedForm = Object.assign({}, oldForm, { PP })
         this.setState({
             [form]: updatedForm,
         })
@@ -119,6 +158,11 @@ class App extends Component {
                     email: signUpForm.email,
                     displayName: signUpForm.displayName,
                     password: signUpForm.password,
+                    location: signUpForm.location,
+                    age: signUpForm.age,
+                    desc: signUpForm.desc,
+                    ethnicity: signUpForm.ethnicity,
+                    PP: signUpForm.PP,
                 }),
             }
         ).then(data => data.json())
@@ -130,11 +174,21 @@ class App extends Component {
                     currentuser: {
                         displayName: signUpForm.displayName,
                         email: signUpForm.email,
+                        location: signUpForm.location,
+                        age: signUpForm.age,
+                        desc: signUpForm.desc,
+                        ethnicity: signUpForm.ethnicity,
+                        PP: signUpForm.PP,
                     },
                     signUpForm: {
                         displayName: '',
                         email: '',
-                        password: ''
+                        password: '',
+                        location: '',
+                        age: '',
+                        desc: '',
+                        ethnicity: '',
+                        PP: '',
                     },
                 });
                 this.api = API(access_token);
@@ -188,12 +242,17 @@ class App extends Component {
         this.api.get({
             endpoint: `api/users/${id}`,
         })
-            .then(({ _id, email, displayName }) => {
+            .then(({ _id, email, displayName, location, age, ethnicity, desc, PP }) => {
                 this.setState({
                     [userField]: {
                         _id,
                         email,
-                        displayName
+                        displayName, 
+                        location,
+                        age,
+                        ethnicity,
+                        desc,
+                        PP
                     }
                 });
             });
@@ -205,6 +264,14 @@ class App extends Component {
             endpoint: 'api/users',
         }).then(({ users }) => {
             this.setState({ people: users });
+        });
+    }
+
+    loadMatches() {
+        this.api.get({
+            endpoint: 'api/users/matches',
+        }).then(({ users }) => {
+            this.setState({ matches: users });
         });
     }
 
@@ -223,12 +290,14 @@ class App extends Component {
     }
 
     render() {
-        const { currentuser, user, signUpForm, signInForm, people, } = this.state;
+        const { currentuser, user, signUpForm, signInForm, people, matches, uploadPhoto} = this.state;
 
         return (
             <Router>
                 <div>
-                    <ul>
+                <iframe src="https://giphy.com/embed/YkdDRLd5KVsE8YzOZs" width="100" height="100" frameBorder="0"></iframe>                    
+                <h2>Pairs</h2>
+                <ul>
                         <li><Link to="/app/signin">Sign in</Link></li>
                         <li><Link to="/app/signup">Sign up</Link></li>
                         <Protected authenticated={!!currentuser}>
@@ -237,6 +306,11 @@ class App extends Component {
                         <Protected authenticated={!!currentuser}>
                             <li><Link to="/app/people">People</Link></li>
                         </Protected>
+                        {/* <Protected authenticated={!!currentuser}>
+                            <li><Link to="/app/matches">Matches</Link></li>
+                        </Protected>
+                        
+                        <li><Link to="/app/uploadPP">Upload Profile Pic</Link></li> */}
                     </ul>
                     <div>
                         <Route path="/app/signup" render={() => (
@@ -245,7 +319,19 @@ class App extends Component {
                                 onNameUpdate={this.onNameUpdate.bind(this)}
                                 onEmailUpdate={this.onEmailUpdate.bind(this)}
                                 onPasswordUpdate={this.onPasswordUpdate.bind(this)}
+                                onDescUpdate={this.onDescUpdate.bind(this)}
+                                onAgeUpdate={this.onAgeUpdate.bind(this)}
+                                onLocationUpdate={this.onLocationUpdate.bind(this)}
+                                onEthnicityUpdate={this.onEthnicityUpdate.bind(this)}
+                                onPPUpdate={this.onPPUpdate.bind(this)}
                                 onSubmit={this.onSignUpSubmit.bind(this)}
+                            />
+                        )} />
+                        <Route path="/app/uploadPP" render={() => (
+                            <UploadPhoto
+                                state={uploadPhoto}
+                                onPPUpdate={this.onPPUpdate.bind(this)}
+                                onSubmit={this.onUploadPPSubmit.bind(this)}
                             />
                         )} />
                         <Route path="/app/signin" render={() => (
@@ -260,6 +346,12 @@ class App extends Component {
                             <PeopleList
                                 people={people}
                                 loadPeople={this.loadPeople.bind(this)}
+                            />
+                        )} />
+                        <Route path="/app/matches" render={() => (
+                            <MatchList
+                                matches={matches}
+                                loadMatches={this.loadMatches.bind(this)}
                             />
                         )} />
                         <Switch>

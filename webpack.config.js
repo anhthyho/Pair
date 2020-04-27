@@ -4,18 +4,22 @@ module.exports = {
   mode: 'development',
   output: {
     path: path.resolve(__dirname, './dist'),
-    filename: 'bundle.js', 
+    filename: 'bundle.js',
   },
-  module:{
-    rules:[{
+  module: {
+    rules: [{
       test: /\.js$/,
       loader: 'babel-loader',
       include: [
         path.resolve(__dirname, './src'),
       ],
-      options:{
-        presets:['@babel/preset-react']
+      options: {
+        presets: ['@babel/preset-react']
       }
+    },
+    {
+      test: /\.css$/,
+      loader: "style-loader!css-loader"
     }]
   },
   devServer: {

@@ -4,11 +4,16 @@ class SignupForm extends Component{
     render(){
         const {
             state: {
-                displayName, email, password
+                displayName, email, password, desc, age, ethnicity, location, PP
             }, 
             onNameUpdate,
             onEmailUpdate,
             onPasswordUpdate,
+            onDescUpdate,
+            onLocationUpdate,
+            onEthnicityUpdate,
+            onAgeUpdate,
+            onPPUpdate, 
             onSubmit,
             history,
         } = this.props;
@@ -38,6 +43,41 @@ class SignupForm extends Component{
                         onChange={e => onPasswordUpdate(FORM_NAME, e.target.value)}
                         value = {password}
                         placeholder="Password"/>
+                </div>
+                <div>
+                    <input 
+                        type="desc" 
+                        onChange={e => onDescUpdate(FORM_NAME, e.target.value)}
+                        value = {desc}
+                        placeholder="Talk about yourself!"/>
+                </div>
+                <div>
+                    <input 
+                        type="age" 
+                        onChange={e => onAgeUpdate(FORM_NAME, e.target.value)}
+                        value = {age}
+                        placeholder="Age"/>
+                </div>
+                <div>
+                    <input 
+                        type="ethnicity" 
+                        onChange={e => onEthnicityUpdate(FORM_NAME, e.target.value)}
+                        value = {ethnicity}
+                        placeholder="Ethnicity"/>
+                </div>
+                <div>
+                    <input 
+                        type="location" 
+                        onChange={e => onLocationUpdate(FORM_NAME, e.target.value)}
+                        value = {location}
+                        placeholder="Location"/>
+                </div>
+                <div>
+                    <input 
+                        type="PP" 
+                        onChange={e => onPPUpdate(FORM_NAME, e.target.value)}
+                        value = {PP}
+                        placeholder="Profile Picture Link"/>
                 </div>
                 <div>
                     <button type="button" onClick={ () => {

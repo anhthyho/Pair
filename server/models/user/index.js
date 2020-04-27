@@ -10,6 +10,11 @@ const UserSchema = new Schema({
     displayName: String,
     hashedPassword: String,
     salt: String,
+    desc: String,
+    age: String, 
+    ethnicity: String, 
+    location: String, 
+    PP: String,  
     scores: {
         type: Object,
         default: {}, 

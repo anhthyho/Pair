@@ -14,24 +14,27 @@ class PeopleList extends Component {
             people,
         } = this.props;
         return (
-            <table>
-                <tbody>
-                    {
-                        people.map(person =>
-                            <tr key={person._id}>
-                                <td>
-                                    {person.displayName}
-                                </td>
-                                <td>
-                                    <Link to={`/app/user/${person._id}/profile`}>
-                                        Details
+            <div>
+                <h3>Choose your pair!</h3>
+                <table>
+                    <tbody>
+                        {
+                            people.map(person =>
+                                <tr key={person._id}>
+                                    <td>
+                                        {person.displayName}
+                                    </td>
+                                    <td>
+                                        <Link to={`/app/user/${person._id}/profile`}>
+                                            Details
                                     </Link>
-                                </td>
-                            </tr>
-                        )
-                    }
-                </tbody>
-            </table>
+                                    </td>
+                                </tr>
+                            )
+                        }
+                    </tbody>
+                </table>
+            </div>
         );
     }
 }

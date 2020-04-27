@@ -42,48 +42,64 @@ module.exports = (db, isAuthenticated) => {
         user.save().then(res.json({ score: user.scores[id] }));
     });
 
+    router.get('/matches', isAuthenticated, (req, res) => {
+        const { user } = req;
+
+        const likedUsersIds = Object.keys(user.scores).filter(id => user.scores[id] > 0);
+        //console.log(likedUsersIds);
+
+        //returns liked users (matches)
+        User.find({_id:{$in: likedUsersIds}}).then(likedUsers =>{
+                console.log(likedUsers);
+                res.json({
+                        users: likedUsers,
+                    });
+            });
+
+    });
+
     router.get('/', isAuthenticated, (req, res) => {
         const { user } = req;
 
         const likedUsersIds = Object.keys(user.scores).filter(id => user.scores[id] > 0);
 
-        User.find({ _id: { $in: likedUsersIds } }).then(likedUsers => {
-            const likedUsersPrime =
-                likedUsers.reduce((acc, cur) => {
-                    if (!cur.scores) {
-                        return acc;
-                    }
-                    const likedUsersIds_ =
-                        Object
-                            .keys(cur.scores)
-                            .filter(id => cur.scores[id] > 0);
-                    return [].concat(likedUsersIds_, acc);
-                }, []);
+        // User.find({ _id: { $in: likedUsersIds } }).then(likedUsers => {
+        //     const likedUsersPrime =
+        //         likedUsers.reduce((acc, cur) => {
+        //             if (!cur.scores) {
+        //                 return acc;
+        //             }
+        //             const likedUsersIds_ =
+        //                 Object
+        //                     .keys(cur.scores)
+        //                     .filter(id => cur.scores[id] > 0);
+        //             return [].concat(likedUsersIds_, acc);
+        //         }, []);
 
-            User.find({}).then(users => {
-                const usersPrime = users.filter(u => {
-                    if (!u.scores) {
-                        return false;
-                    } else {
-                        const found = likedUsersPrime.reduce((acc, cur) => {
-                            if (acc) {
-                                return true;
-                            } else {
-                                if (u.scores[cur] && u.scores[cur] > 0) {
-                                    return true;
-                                } else {
-                                    return false;
-                                }
-                            }
-                        }, false);
-                        return found;
-                    }
-                });
-                res.json({
-                    users: usersPrime,
-                });
-            });
-        });
+        //     User.find({}).then(users => {
+        //         const usersPrime = users.filter(u => {
+        //             if (!u.scores) {
+        //                 return false;
+        //             } else {
+        //                 const found = likedUsersPrime.reduce((acc, cur) => {
+        //                     if (acc) {
+        //                         return true;
+        //                     } else {
+        //                         if (u.scores[cur] && u.scores[cur] > 0) {
+        //                             return true;
+        //                         } else {
+        //                             return false;
+        //                         }
+        //                     }
+        //                 }, false);
+        //                 return found;
+        //             }
+        //         });
+        //         res.json({
+        //             users: usersPrime,
+        //         });
+        //     });
+        // });
 
 
 
@@ -95,14 +111,13 @@ module.exports = (db, isAuthenticated) => {
         //         });
         // });
 
-        // User.find({}, '-hashedPassword -salt').then(users => {
-
-        //     console.log(user);
-        //     //list of all users
-        //     res.json({
-        //         users,
-        //     });
-        // });
+        User.find({}, '-hashedPassword -salt').then(users => {
+            console.log(user);
+            //list of all users
+            res.json({
+                users,
+            });
+        });
     });
     return router;
 }; 

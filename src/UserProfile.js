@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import "./styles.css";
 class UserProfile extends Component {
     constructor(props) {
         super(props);
@@ -46,11 +47,16 @@ class UserProfile extends Component {
                 </div>
             );
         }
-        //console.log(user);
+        console.log(user);
         return (
             <div>
                 <h2>User Profile</h2>
-                <span>Hi {user.displayName}</span>
+                <h4>{user.displayName}</h4>
+                <h4>Age: {user.age}</h4>
+                <h4>Location: {user.location}</h4>
+                <h4>Ethnicity: {user.ethnicity}</h4>
+                <h4>About me: {user.desc}</h4>
+                <div><img src={user.PP} alt={user.displayName}/></div>
                 <div>
                     <button onClick={() => onDown(user._id)}>
                         Pass
