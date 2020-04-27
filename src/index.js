@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { render } from 'react-dom';
-import io from 'socket.io-client'; 
+import io from 'socket.io-client';
 import API from './api.js';
 
 import SignupForm from './SignupForm.js';
@@ -9,6 +9,7 @@ import UserProfile from './UserProfile.js';
 import PeopleList from './PeopleList.js';
 import MatchList from './MatchList.js';
 import UploadPhoto from './UploadPhoto.js';
+import "./styles.css";
 
 //switch between showing/not showing based on authentication
 const Protected = ({ authenticated, children }) => (
@@ -44,7 +45,7 @@ class App extends Component {
                 email: 'kasamats@test.com',
                 password: '123123'
             },
-            uploadPhoto:{},
+            uploadPhoto: {},
             messages: [],
         };
         this.api = API(access_token);
@@ -57,35 +58,35 @@ class App extends Component {
 
     componentDidMount() {
         const { access_token } = this.state;
-        this.loadCurrentUser(); 
+        this.loadCurrentUser();
 
         //---- socket.io ----------
         const socket = io('http://localhost:8080');
-        this.socket = socket; 
-        socket.on('getMsgs', messages =>{
+        this.socket = socket;
+        socket.on('getMsgs', messages => {
             this.setState({
-                messages, 
+                messages,
             });
         });
 
-        socket.on('newChatMsg', msg=>{
+        socket.on('newChatMsg', msg => {
             this.setState({
-                messages: [].concat(this.state.messages, msg), 
+                messages: [].concat(this.state.messages, msg),
             });
         })
     }
 
-    sendChatMsg(text){
-        const  msg = {
+    sendChatMsg(text) {
+        const msg = {
             sender: this.state.currentuser.displayName,
             text,
         };
 
         this.setState({
-            messages: [].concat(this.state.messages, msg), 
+            messages: [].concat(this.state.messages, msg),
         });
 
-        this.socket.emit('chatMsg', msg); 
+        this.socket.emit('chatMsg', msg);
     }
 
     onNameUpdate(displayName) {
@@ -247,7 +248,7 @@ class App extends Component {
                     [userField]: {
                         _id,
                         email,
-                        displayName, 
+                        displayName,
                         location,
                         age,
                         ethnicity,
@@ -290,28 +291,32 @@ class App extends Component {
     }
 
     render() {
-        const { currentuser, user, signUpForm, signInForm, people, matches, uploadPhoto} = this.state;
+        const { currentuser, user, signUpForm, signInForm, people, matches, uploadPhoto } = this.state;
 
         return (
             <Router>
-                <div>
-                <iframe src="https://giphy.com/embed/YkdDRLd5KVsE8YzOZs" width="100" height="100" frameBorder="0"></iframe>                    
-                <h2>Pairs</h2>
-                <ul>
-                        <li><Link to="/app/signin">Sign in</Link></li>
-                        <li><Link to="/app/signup">Sign up</Link></li>
-                        <Protected authenticated={!!currentuser}>
-                            <li><Link to="/app/user/me/profile">{currentuser && currentuser.displayName}</Link></li>
-                        </Protected>
-                        <Protected authenticated={!!currentuser}>
-                            <li><Link to="/app/people">People</Link></li>
-                        </Protected>
-                        {/* <Protected authenticated={!!currentuser}>
+                <div class="central">
+                    <div align="center">
+                        <iframe src="https://giphy.com/embed/YkdDRLd5KVsE8YzOZs" width="100" height="100" frameBorder="0"></iframe>
+                    </div>
+                    <h1>Pairs</h1>
+                    <div class="dropdown">
+                        <span>Menu</span>
+                        <div class="dropdown-content">
+                            <p><Link to="/app/signin">Sign in</Link></p>
+                            <p><Link to="/app/signup">Sign up</Link></p>
+                            <p><Protected authenticated={!!currentuser}>
+                                <Link to="/app/user/me/profile">{currentuser && currentuser.displayName}</Link>
+                            </Protected></p>
+                            <p><Protected authenticated={!!currentuser}>
+                                <Link to="/app/people">People</Link>
+                            </Protected></p>
+                            {/* <Protected authenticated={!!currentuser}>
                             <li><Link to="/app/matches">Matches</Link></li>
-                        </Protected>
-                        
-                        <li><Link to="/app/uploadPP">Upload Profile Pic</Link></li> */}
-                    </ul>
+                            </Protected>
+                            <li><Link to="/app/uploadPP">Upload Profile Pic</Link></li> */}
+                        </div>
+                    </div>
                     <div>
                         <Route path="/app/signup" render={() => (
                             <SignupForm
@@ -356,7 +361,7 @@ class App extends Component {
                         )} />
                         <Switch>
                             <Route path="/app/user/me/profile" render={() => (
-                                <UserProfile 
+                                <UserProfile
                                     user={currentuser}
                                     onSend={this.sendChatMsg.bind(this)}
                                     messages={this.state.messages}

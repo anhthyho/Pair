@@ -15,7 +15,8 @@ class SigninForm extends Component{
         const FORM_NAME = 'signInForm';
 
         return(
-            <div>
+            <div class="central">
+                <div class="login-form">
                 <h2>Sign In</h2>
                 <div>
                     <input 
@@ -36,6 +37,7 @@ class SigninForm extends Component{
                         onSubmit(); }
                     }>Continue</button>
                 </div>
+            </div>
             </div>
         );
     }

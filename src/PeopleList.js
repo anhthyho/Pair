@@ -25,6 +25,9 @@ class PeopleList extends Component {
                                         {person.displayName}
                                     </td>
                                     <td>
+                                        {person.desc}
+                                    </td>
+                                    <td>
                                         <Link to={`/app/user/${person._id}/profile`}>
                                             Details
                                     </Link>

@@ -49,15 +49,16 @@ class UserProfile extends Component {
         }
         console.log(user);
         return (
-            <div>
-                <h2>User Profile</h2>
-                <h4>{user.displayName}</h4>
-                <h4>Age: {user.age}</h4>
-                <h4>Location: {user.location}</h4>
-                <h4>Ethnicity: {user.ethnicity}</h4>
-                <h4>About me: {user.desc}</h4>
-                <div><img src={user.PP} alt={user.displayName}/></div>
-                <div>
+            <div class="central">
+                <h2>{user.displayName}</h2>
+                <div class="bio">
+                    <h4>Age: {user.age}</h4>
+                    <h4>Location: {user.location}</h4>
+                    <h4>Ethnicity: {user.ethnicity}</h4>
+                    <h4>About me: {user.desc}</h4>
+                    <div><img src={user.PP} alt={user.displayName} /></div>
+                </div>
+                <div class="like">
                     <button onClick={() => onDown(user._id)}>
                         Pass
                     </button>
@@ -65,23 +66,24 @@ class UserProfile extends Component {
                         Like
                     </button>
                 </div>
-                <div>
-                    <h3>Chat</h3>
+                <h3>Chat</h3>
+                <div class="chat">
                     {
-                        messages.map((msg,index) => (
-                            <div key={index}>
+                        messages.map((msg, index) => (
+                            <div class="darker" key={index}>
                                 <b>{msg.sender}: </b>
                                 <span>{msg.text}</span>
                             </div>
                         ))
                     }
-                    <form onSubmit={this.sendMsg}>
+                    <div id="anchor"></div>
+                </div>
+                <form onSubmit={this.sendMsg}>
                         <input
                             onChange={this.onUpdateInput}
                             value={chatInputText}
                         />
                     </form>
-                </div>
             </div>
         );
     }
