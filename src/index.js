@@ -5,6 +5,12 @@ import API from './api.js';
 import SignupForm from './SignupForm.js'; 
 import SigninForm from './SigninForm.js'; 
 import UserProfile from './UserProfile.js'; 
+import PeopleList from './PeopleList.js';
+
+//switch between showing/not showing based on authentication
+const Protected = ({authenticated, children}) => (
+    authenticated ? children : null
+);
 
 import {
     BrowserRouter as Router,
@@ -24,6 +30,7 @@ class App extends Component{
             access_token,
             currentuser: null, 
             user: null,
+            people: [], 
             signInForm:{
                 email:'alice@example.com',
                 password:'123123'
@@ -150,9 +157,10 @@ class App extends Component{
         this.api.get({
             endpoint: `api/users/${id}`,
         })
-            .then(({email, displayName}) => {
+            .then(({_id, email, displayName}) => {
                 this.setState({
                     [userField]: {
+                        _id, 
                         email,
                         displayName
                     }
@@ -160,9 +168,31 @@ class App extends Component{
             });
     }
 
+    //functionally preserving state
+    loadPeople(){
+        this.api.get({
+            endpoint: 'api/users',
+        }).then(({users})=>{
+            this.setState({people: users});
+        });
+    }
+
+    vote(upOrDown, id){
+        this.api.get({
+            endpoint: `api/users/${id}/vote/${upOrDown}`,
+        })
+    }
+
+    voteUp(id){
+        this.vote('up', id);
+    }
+
+    voteDown(id){
+        this.vote('down', id);
+    }
 
     render(){
-        const {currentuser, user, signUpForm, signInForm} = this.state; 
+        const {currentuser, user, signUpForm, signInForm, people,} = this.state; 
         
         return (
             <Router>
@@ -170,9 +200,12 @@ class App extends Component{
                     <ul>
                         <li><Link to= "/app/signin">Sign in</Link></li>
                         <li><Link to= "/app/signup">Sign up</Link></li>
-                        { currentuser && 
-                            <li><Link to= "/app/user/me/profile">{currentuser.displayName}</Link></li>
-                        }
+                        <Protected authenticated={!!currentuser}>
+                            <li><Link to= "/app/user/me/profile">{currentuser && currentuser.displayName}</Link></li>
+                        </Protected>
+                        <Protected authenticated={!!currentuser}>
+                        <li><Link to= "/app/people">People</Link></li>
+                        </Protected>
                     </ul>
                     <div> 
                         <Route path="/app/signup" render= { () => (
@@ -192,6 +225,12 @@ class App extends Component{
                                 onSubmit={this.onSignInSubmit.bind(this)}
                             /> 
                         )}/>
+                        <Route path="/app/people" render= { () => (
+                            <PeopleList  
+                                people = {people}
+                                loadPeople = {this.loadPeople.bind(this)}
+                            /> 
+                        )}/>
                         <Switch>
                             <Route path="/app/user/me/profile"  render= { () => (<UserProfile user={currentuser}/>)}/>
                             <Route path="/app/user/:id/profile" render= { ({match}) => (
@@ -199,6 +238,8 @@ class App extends Component{
                                     user={user} 
                                     match={match}
                                     loadUser={this.loadUser.bind(this)}
+                                    onUp= {this.voteUp.bind(this)}
+                                    onDown= {this.voteDown.bind(this)}
                                 />)}/>
                         </Switch>
                     </div>

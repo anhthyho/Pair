@@ -9,7 +9,12 @@ const UserSchema = new Schema({
     email: String,
     displayName: String,
     hashedPassword: String,
-    salt: String
+    salt: String,
+    scores: {
+        type: Object,
+        default: {}, 
+        //other user id: score 
+    },
 });
 
 UserSchema

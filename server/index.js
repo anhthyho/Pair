@@ -19,20 +19,25 @@ const User = require('./models/user')(db);
 
 //find is SELECT in sql - query all users
 const seed = () => {
-    User.find({}).remove().then(() => {
-        const users = [{
-            email: 'alice@example.com',
-            displayName: 'Alice',
-            password: '123123',
-        }, {
-            email: 'bob@example.com',
-            displayName: 'Bob',
-            password: '321321',
-        }];
-        User.create(users, (err, users_)=>{
-            console.log(`MONGODB SEED: ${users_.length} Users created.`); 
+    User.deleteMany({}).then(()=>{
+        User.find({}).remove().then(() => {
+            const users = [{
+                email: 'alice@example.com',
+                displayName: 'Alice',
+                password: '123123',
+                scores: {},
+            }, {
+                email: 'bob@example.com',
+                displayName: 'Bob',
+                password: '321321',
+                scores: {},
+            }];
+            User.create(users, (err, users_)=>{
+                console.log(`MONGODB SEED: ${users_.length} Users created.`); 
+            })
         })
     })
+    
 };
 
 // --------------------------------------------
@@ -161,7 +166,7 @@ app.get('/', function(req,res){
 // api: get, post, put, delete
 //makes middleware
 
-app.use('/api', require('./api')(isAuthenticated));
+app.use('/api', require('./api')(db, isAuthenticated));
 
 // --------------------------------------------
 
