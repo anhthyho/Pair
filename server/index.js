@@ -19,22 +19,48 @@ const User = require('./models/user')(db);
 
 //find is SELECT in sql - query all users
 const seed = () => {
+    const users = [{
+        email: 'alice@example.com',
+        displayName: 'Alice',
+        password: '123123',
+        scores: {},
+    }, {
+        email: 'bob@example.com',
+        displayName: 'Bob',
+        password: '321321',
+        scores: {},
+    },
+    {
+        email: 'daniel@example.com',
+        displayName: 'Daniel',
+        password: '123123',
+        scores: {},
+    },
+    {
+        email: 'jennifer@example.com',
+        displayName: 'Jennifer',
+        password: '123123',
+        scores: {},
+    },];
+
     User.deleteMany({}).then(() => {
-        User.find({}).remove().then(() => {
-            const users = [{
-                email: 'alice@example.com',
-                displayName: 'Alice',
-                password: '123123',
-                scores: {},
-            }, {
-                email: 'bob@example.com',
-                displayName: 'Bob',
-                password: '321321',
-                scores: {},
-            }];
-            User.create(users, (err, users_) => {
-                console.log(`MONGODB SEED: ${users_.length} Users created.`);
-            })
+        User.create(users, (err, users_) => {
+            console.log(`MONGODB SEED: ${users_.length} Users created.`);
+
+            const [alice, bob, daniel, jennifer] = users_;
+            bob.scores = {
+                [jennifer._id]: 1,
+            };
+            jennifer.scores = {
+                [daniel._id]: 1,
+            };
+            alice.scores = {
+                [daniel._id]: 1,
+            };
+
+            alice.save();
+            bob.save();
+            jennifer.save();
         })
     })
 
