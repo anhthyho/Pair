@@ -21,7 +21,7 @@ class SignupForm extends Component{
         const FORM_NAME = 'signUpForm';
         
         return(
-            <div>
+            <div class="sign-up">
                 <h2>Sign Up for Pairs!</h2>
                 <div>
                     <input 
@@ -82,7 +82,7 @@ class SignupForm extends Component{
                 <div>
                     <button type="button" onClick={ () => {
                         onSubmit(); 
-                        history.push('/app/user/profile');
+                        history.push('/app/user/me/profile');
                     }}>Continue</button>
                 </div>
 

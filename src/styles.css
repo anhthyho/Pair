@@ -5,45 +5,89 @@ h1 {
     color:#234B2C;
     margin: auto ;
     text-align: center;
-    font-family: 'Comic Neue', cursive;
+    font-family: 'Berkshire Swash';
+    font-size: 50px;
+    padding-bottom: 15px;
   }
 h2 {
   color:#5D6166;
   margin: auto ;
   text-align: center;
-  font-family: 'Comic Neue', cursive;
+  font-family: 'Manrope';
+  padding-bottom: 10px;
 }
 h3 {
     color:#5D6166;
     margin: auto ;
     text-align: center;
-    font-family: 'Comic Neue', cursive;
+    font-family: 'Spartan';
+    padding-bottom: 10px;
+    padding-top: 20px;
   }
 span {
     color:#5D6166;
     margin: auto ;
     text-align: center;
-    font-family: 'Comic Neue', cursive;
+    font-family: 'Spartan';
+  }
+  h5 {
+    color:#234B2C;
+    margin: auto ;
+    text-align: center;
+    font-family: 'Manrope';
+    font-size: 30px;
+    padding-bottom: 10px;
   }
 .central{
-    background-color:  #A7DDB0;
+    background-color:  #C1EEE1;
     margin: auto;
     width: 400px;
-    font-family: 'Comic Neue', cursive;
-    padding: 20px 0 50px 0;
+    font-family: 'Spartan';
+    padding: 10px 0 50px 0;
     
 }
 .login-form {
     width: 300px;
     margin: 0 auto;
-    font-family: 'Comic Neue', cursive;
+    font-family: 'Spartan';
     padding: 20px 0 50px 0;
 }
 .sign-up {
     width: 300px;
     margin: auto;
-    font-family: 'Comic Neue', cursive;
+    font-family: 'Spartan';
+    padding: 20px 0 50px 0;
 }
+
+.sign-up input {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #dddddd;
+  margin-bottom: 15px;
+  box-sizing:border-box;
+  font-family: 'Spartan';
+}
+
+.sign-up h2 {
+  width: 100%;
+  padding: 15px;
+  margin: auto;
+  box-sizing:border-box;
+  font-family: 'Spartan';
+}
+
+.sign-up button {
+  width: 100%;
+  padding: 15px;
+  background-color: #535b63;
+  border: 0;
+  box-sizing: border-box;
+  cursor: pointer;
+  font-weight: bold;
+  color: #ffffff;
+  font-family: Spartan;
+}
+
 .login-form h1 {
     text-align: center;
     color: #4d4d4d;
@@ -57,7 +101,7 @@ span {
     border: 1px solid #dddddd;
     margin-bottom: 15px;
     box-sizing:border-box;
-    font-family: 'Comic Neue', cursive;
+    font-family: 'Spartan';
 }
 .login-form button {
     width: 100%;
@@ -68,6 +112,7 @@ span {
     cursor: pointer;
     font-weight: bold;
     color: #ffffff;
+    font-family: Spartan;
 }
 .sign-up input[type="submit"] {
     width: 50%;
@@ -90,7 +135,7 @@ span {
     position: absolute;
     background-color: #f9f9f9;
     min-width: 400px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    box-shadow: px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
   }
   
@@ -99,21 +144,42 @@ span {
     text-align: center;
     margin: auto;
   }
-.bio {
-    width: 300px;
+.list {
+    width: 61%;
     margin: 0 auto;
     background-color: #F5F5F5;
-    font-family: 'Comic Neue', cursive;
-    padding: 10px 0 10px 0;
+    font-family: 'Spartan';
+    font-size: 12px;
+    padding: 20px 15px 20px 22px;
 }
-.bio img {
-    object-fit: cover;
-    width:300px;
-    height:300px;
-    margin: auto;
+.bio {
+  width: 300px;
+  margin: 0 auto;
+  background-color: #F5F5F5;
+  font-family: 'Spartan';
+  font-size: 12px;
+  padding: 20px 10px 30px 10px;
+}
+.pic img{
+  object-fit: cover;
+  width:280px;
+  height:280px;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  padding-top: 40px ;
+}
+.prof img{
+  object-fit: cover;
+  width:300px;
+  height:300px;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  padding: 30px ;
 }
 .like{
-    padding: 10px 0 10px 0;
+    padding: 10px 0 40px 0;
     text-align: center;
 }
 .like button {
@@ -127,14 +193,15 @@ span {
     cursor: pointer;
     font-weight: bold;
     color: #ffffff;
+    font-family: Spartan;
 }
 .chat {
     background-color: #f1f1f1;
-    height: 300px;
+    height: 200px;
     margin: auto;
-    width: 90%;
-    font-family: 'Comic Neue', cursive;
-    padding: 20px 10px 50px 10px;
+    width: 80%;
+    font-family: 'Spartan';
+    padding: 30px 10px 50px 10px;
     overflow-y: auto;
     flex-direction: column-reverse;
   }
@@ -142,15 +209,16 @@ span {
 .darker {
     padding: 10px 0 10px 0;
     border-color: #ccc;
-    background-color: #ddd; 
-      
+    background-color: #ddd;  
   }
 
 form{
     color: #e9b49c;
     font-size: 1em;
     text-align: right;
-    padding: 10px;
+    padding-top: 10px;
+    padding-left: 30px;
+    padding-right: 30px;
   }
 
   input{

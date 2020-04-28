@@ -10,6 +10,7 @@ class SigninForm extends Component{
             onEmailUpdate,
             onPasswordUpdate,
             onSubmit,
+            history,
         } = this.props;
 
         const FORM_NAME = 'signInForm';
@@ -34,7 +35,9 @@ class SigninForm extends Component{
                 </div>
                 <div>
                     <button type="button" onClick={ () => {
-                        onSubmit(); }
+                         onSubmit(); 
+                         history.push('/app/user/me/profile');
+                         }
                     }>Continue</button>
                 </div>
             </div>
@@ -43,4 +46,4 @@ class SigninForm extends Component{
     }
 }
 const SignInFormWithRouter = withRouter(SigninForm);
-export default SigninForm;
+export default withRouter(SigninForm);

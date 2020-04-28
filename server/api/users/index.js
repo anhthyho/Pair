@@ -11,6 +11,7 @@ const router = express.Router();
  */
 module.exports = (db, isAuthenticated) => {
     const User = require('../../models/user')(db);
+    
     router.use('/me', isAuthenticated, (req, res) => {
         res.json(req.user);
     });
@@ -60,6 +61,7 @@ module.exports = (db, isAuthenticated) => {
 
     router.get('/', isAuthenticated, (req, res) => {
         const { user } = req;
+        //console.log(user._id);
 
         const likedUsersIds = Object.keys(user.scores).filter(id => user.scores[id] > 0);
 
@@ -111,13 +113,24 @@ module.exports = (db, isAuthenticated) => {
         //         });
         // });
 
-        User.find({}, '-hashedPassword -salt').then(users => {
-            console.log(user);
+        User.find({_id: {$ne: user._id}}, '-hashedPassword -salt').then(users => {
+            //console.log(user._id);
             //list of all users
             res.json({
                 users,
             });
         });
+
+        //excludes self and already liked 
+        // User.find({_id: {$ne: user._id, $nin: likedUsersIds}}, '-hashedPassword -salt').then(users => {
+        //     //console.log(user._id);
+        //     //list of all users
+        //     res.json({
+        //         users,
+        //     });
+        // });
     });
+
+
     return router;
 }; 

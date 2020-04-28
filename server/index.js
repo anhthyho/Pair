@@ -203,7 +203,7 @@ app.post('/auth/signup', (req, res) => {
             // send an auth token to user 
             User.create(user).then(user_ => {
                 const access_token = auth.sign(user_);
-                console.log(user.displayName + ': ' + access_token);
+                //console.log(user.displayName + ': ' + access_token);
                 res.json({ access_token });
             });
         } else {
@@ -214,9 +214,7 @@ app.post('/auth/signup', (req, res) => {
             });
         }
     })
-
-}
-);
+});
 const isAuthenticated = auth.isAuthenticated(User);
 // --------------------------------------------
 // API TIMEEEEEE - basic routes

@@ -43,7 +43,12 @@ class App extends Component {
             signUpForm: {
                 displayName: 'Kasamats',
                 email: 'kasamats@test.com',
-                password: '123123'
+                password: '123123',
+                desc: 'I like basketball', 
+                location: 'Tokyo',
+                ethnicity: 'Asian',
+                PP: 'https://i.pinimg.com/originals/d2/c2/1f/d2c21f471e092a56a03ed9f88dcd7211.jpg',
+                age: '20',
             },
             uploadPhoto: {},
             messages: [],
@@ -228,7 +233,9 @@ class App extends Component {
                 this.api = API(access_token);
                 this.loadCurrentUser();
             })
-            .catch(err => console.error(err));
+            .catch(err => console.error(err));;
+        
+        
     }
 
     loadCurrentUser() {
@@ -257,6 +264,7 @@ class App extends Component {
                     }
                 });
             });
+        
     }
 
     //functionally preserving state
@@ -299,7 +307,7 @@ class App extends Component {
                     <div align="center">
                         <iframe src="https://giphy.com/embed/YkdDRLd5KVsE8YzOZs" width="100" height="100" frameBorder="0"></iframe>
                     </div>
-                    <h1>Pairs</h1>
+                    <h1>pair</h1>
                     <div class="dropdown">
                         <span>Menu</span>
                         <div class="dropdown-content">
@@ -311,10 +319,10 @@ class App extends Component {
                             <p><Protected authenticated={!!currentuser}>
                                 <Link to="/app/people">People</Link>
                             </Protected></p>
-                            {/* <Protected authenticated={!!currentuser}>
-                            <li><Link to="/app/matches">Matches</Link></li>
-                            </Protected>
-                            <li><Link to="/app/uploadPP">Upload Profile Pic</Link></li> */}
+                            {/* <p><Protected authenticated={!!currentuser}>
+                            <Link to="/app/matches">Matches</Link>
+                            </Protected></p> */}
+                            {/* <li><Link to="/app/uploadPP">Upload Profile Pic</Link></li> */}
                         </div>
                     </div>
                     <div>

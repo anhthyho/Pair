@@ -39,7 +39,6 @@ class UserProfile extends Component {
         //waiting to load profile page 
 
         const { chatInputText } = this.state;
-
         if (user === null || user === false) {
             return (
                 <div>
@@ -47,17 +46,18 @@ class UserProfile extends Component {
                 </div>
             );
         }
-        console.log(user);
+        //console.log(user);
         return (
             <div class="central">
-                <h2>{user.displayName}</h2>
+                <h5>{user.displayName}</h5>
                 <div class="bio">
                     <h4>Age: {user.age}</h4>
                     <h4>Location: {user.location}</h4>
                     <h4>Ethnicity: {user.ethnicity}</h4>
                     <h4>About me: {user.desc}</h4>
-                    <div><img src={user.PP} alt={user.displayName} /></div>
+                    
                 </div>
+                <div class="prof"><img src={user.PP} alt={user.displayName} /></div>
                 <div class="like">
                     <button onClick={() => onDown(user._id)}>
                         Pass
