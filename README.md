@@ -11,7 +11,7 @@ packages to prep:
 To start client: yarn-start-client 
 To start server: yarn-start-server
 
-###Major Features:###
+### Major Features: ###
 Sign up as a new user with: 
 * Name
 * Email
