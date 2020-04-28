@@ -1,0 +1,47 @@
+body {
+  background-color:  #ffffff;
+}
+h1 {
+    color:#234B2C;
+    margin: auto ;
+    text-align: center;
+    font-family: 'Berkshire Swash';
+    font-size: 50px;
+    padding-bottom: 15px;
+  }
+h2 {
+  color:#5D6166;
+  margin: auto ;
+  text-align: center;
+  font-family: 'Manrope';
+  padding-bottom: 10px;
+  font-size: 15px;
+}
+.central{
+    background-color:  #C1EEE1;
+    margin: auto;
+    width: 400px;
+    font-family: 'Spartan';
+    padding: 20px 0 0px 0;
+    
+}
+.mainpage {
+    width: 300px;
+    margin: auto;
+    font-family: 'Spartan';
+    padding: 0px 0 0px 0;
+}
+
+.mainpage button {
+  width: 100%;
+  padding: 25px;
+  background-color: #535b63;
+  border: 0;
+  box-sizing: border-box;
+  cursor: pointer;
+  font-weight: bold;
+  color: #ffffff;
+  font-family: Spartan;
+  margin-bottom: 30px;
+  font-size: 18px;
+}
